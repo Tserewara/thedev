@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full dark:bg-gray-900">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevPort - Projects</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .project-card:hover .project-hover { transform: translateY(-5px); }
+        .gradient-text { background: linear-gradient(45deg, #6366f1, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body class="h-full bg-gray-50 dark:bg-gray-900 transition-colors">
+    <div class="p-8 max-w-7xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white gradient-text">My Projects</h1>
+            <button onclick="toggleTheme()" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white">🌓</button>
+        </div>
+        {% for project in projects %}
+        <a class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 cursor-pointer" href="{% url "project_details" project.id %}">
+            <div class="project-card bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center">
+                        <span class="text-indigo-600 dark:text-indigo-400 font-mono">API</span>
+                    </div>
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">{{ project.name }}</h2>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 mb-4">Distributed task processing system with Redis backend</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-sm rounded-full">Node.js</span>
+                    <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm rounded-full">Redis</span>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+
+    <script>
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        }
+
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+</body>
+</html>

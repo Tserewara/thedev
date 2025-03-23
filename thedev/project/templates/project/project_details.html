@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full dark:bg-gray-900">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheDev - {{project.name}}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .kanban-column { min-height: 500px; min-width: 300px; }
+        .kanban-card { transition: transform 0.2s ease; }
+        .kanban-card:hover { transform: translateY(-2px); }
+        .code-block { background: #f8fafc; border: 1px solid #e2e8f0; }
+        .dark .code-block { background: #1e293b; border: 1px solid #334155; }
+    </style>
+</head>
+<body class="h-full bg-gray-50 dark:bg-gray-900 transition-colors">
+    <div class="p-8 max-w-7xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">{{ project.name }}</h1>
+            <div class="flex gap-4">
+                <a class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white" href="{% url "project_list" %}">← Back</a>
+                <button onclick="toggleTheme()" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white">🌓</button>
+            </div>
+        </div>
+
+        <div class="flex gap-4 mb-6">
+            <button onclick="showTab('details')" class="px-4 py-2 bg-indigo-600 text-white rounded-lg">Details</button>
+            <button onclick="showTab('kanban')" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg">Kanban</button>
+        </div>
+
+        <div id="details-tab" class="code-block rounded-xl p-6 mb-6 bg-white dark:bg-gray-800">
+            {{ project.details }}
+        </div>
+
+        <div id="kanban-tab" class="overflow-x-auto pb-4 hidden">
+            <div class="flex gap-4 min-w-max">
+                <!-- Backlog Column -->
+                <div class="kanban-column bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
+                    <h3 class="font-semibold mb-4 text-gray-700 dark:text-gray-300">Backlog</h3>
+                    <div class="kanban-card bg-white dark:bg-gray-700 p-4 rounded-lg mb-4 shadow cursor-move">
+                        <p class="text-sm font-medium dark:text-white">Implement Redis connection pool</p>
+                        <span class="text-xs px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full mt-2 inline-block">MVP</span>
+                    </div>
+                </div>
+
+                <!-- Ready to Do Column -->
+                <div class="kanban-column bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
+                    <h3 class="font-semibold mb-4 text-gray-700 dark:text-gray-300">Ready to Do</h3>
+                    <div class="kanban-card bg-white dark:bg-gray-700 p-4 rounded-lg mb-4 shadow cursor-move">
+                        <p class="text-sm font-medium dark:text-white">Setup CI/CD pipeline</p>
+                        <span class="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full mt-2 inline-block">Phase 2</span>
+                    </div>
+                </div>
+
+                <!-- Active Column -->
+                <div class="kanban-column bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
+                    <h3 class="font-semibold mb-4 text-gray-700 dark:text-gray-300">Active</h3>
+                    <div class="kanban-card bg-white dark:bg-gray-700 p-4 rounded-lg mb-4 shadow cursor-move">
+                        <p class="text-sm font-medium dark:text-white">Implement JWT authentication</p>
+                        <span class="text-xs px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full mt-2 inline-block">MVP</span>
+                    </div>
+                </div>
+
+                <!-- Testing Column -->
+                <div class="kanban-column bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
+                    <h3 class="font-semibold mb-4 text-gray-700 dark:text-gray-300">Testing</h3>
+                    <div class="kanban-card bg-white dark:bg-gray-700 p-4 rounded-lg mb-4 shadow cursor-move">
+                        <p class="text-sm font-medium dark:text-white">Write unit tests for API</p>
+                        <span class="text-xs px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full mt-2 inline-block">Phase 3</span>
+                    </div>
+                </div>
+
+                <!-- Production Column -->
+                <div class="kanban-column bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
+                    <h3 class="font-semibold mb-4 text-gray-700 dark:text-gray-300">Production</h3>
+                    <div class="kanban-card bg-white dark:bg-gray-700 p-4 rounded-lg mb-4 shadow cursor-move">
+                        <p class="text-sm font-medium dark:text-white">Deploy initial MVP</p>
+                        <span class="text-xs px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full mt-2 inline-block">MVP</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            document.getElementById('details-tab').classList.toggle('hidden', tabName !== 'details');
+            document.getElementById('kanban-tab').classList.toggle('hidden', tabName !== 'kanban');
+        }
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        }
+
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+</body>
+</html>

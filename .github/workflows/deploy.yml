@@ -1,0 +1,43 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  DB_NAME: ${{ secrets.DB_NAME }}
+  DB_USER: ${{ secrets.DB_USER }}
+  DB_HOST: db
+  SECRET_KEY: ${{ secrets.SECRET_KEY }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+    - name: Copy files to VPS
+      run: |
+        scp -r $GITHUB_WORKSPACE/* ${{ secrets.SSH_USER }}@${{ secrets.VPS_IP }}:/app/
+
+    - name: Deploy to VPS
+      run: |
+        ssh ${{ secrets.SSH_USER }}@${{ secrets.VPS_IP }} << EOF
+        cd /app
+        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" > .env.prod
+        echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env.prod
+        echo "DB_USER=${{ secrets.DB_USER }}" >> .env.prod
+        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env.prod
+        docker-compose -f docker-compose.prod.yml build --no-cache
+        docker-compose -f docker-compose.prod.yml down
+        docker-compose -f docker-compose.prod.yml up -d
+        EOF

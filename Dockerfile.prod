@@ -1,0 +1,33 @@
+# Build stage
+FROM python:3.12-alpine as builder
+
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
+
+RUN apk update \
+    && apk add postgresql-dev gcc python3-dev musl-dev libffi-dev openssl-dev
+
+COPY requirements.txt .
+RUN pip install --user --no-cache-dir -r requirements.txt
+
+# Runtime stage
+FROM python:3.12-alpine
+
+ARG SECRET_KEY
+ARG DB_PASSWORD
+
+ENV SECRET_KEY=$SECRET_KEY
+ENV DB_PASSWORD=$DB_PASSWORD
+ENV DEBUG=0
+ENV PYTHONUNBUFFERED=1
+
+RUN apk update && apk add libpq
+COPY --from=builder /root/.local /root/.local
+ENV PATH=/root/.local/bin:$PATH
+
+WORKDIR /app
+COPY . .
+
+RUN python manage.py collectstatic --noinput
+
+EXPOSE 8000

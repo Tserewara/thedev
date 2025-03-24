@@ -16,6 +16,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Download code
+        uses: actions/checkout@v4
+
+      - name: Copy code to VPS
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          source: .
+          target: /home/ubuntu/thedev
+
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v0.1.3
         with:
@@ -24,22 +37,11 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
-            # Navigate to the project directory, clone/pull latest code
-            if [ -d thedev ]; then
-              cd thedev
-              git pull origin master
-            else
-              git clone https://github.com/Tserewara/thedev.git
-              cd thedev
-            fi
-
-            # Create or update .env.prod with secrets
-            echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" > .env.prod
+            echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env.prod
             echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env.prod
             echo "DB_USER=${{ secrets.DB_USER }}" >> .env.prod
             echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env.prod
-
-            # Build and restart Docker containers
+            ls -la
             docker compose -f docker-compose.prod.yml build --no-cache
             docker compose -f docker-compose.prod.yml down
             docker compose -f docker-compose.prod.yml up -d

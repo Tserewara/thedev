@@ -24,14 +24,15 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
-            # copy docker-compose.prod.yml to VPS
-            scp docker-compose.prod.yml ${{ secrets.SSH_USER }}@${{ secrets.VPS_IP }}:/app/docker-compose.prod.yml
+            # pull the latest code to the vps
+            git pull origin master
             cd /app
-            echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env.prod
-            echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env.prod
-            echo "DB_USER=${{ secrets.DB_USER }}" >> .env.prod
-            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env.prod
-            ls -la
-            docker compose -f docker-compose.prod.yml build --no-cache
-            docker compose -f docker-compose.prod.yml down
-            docker compose -f docker-compose.prod.yml up -d
+#            cd /app
+#            echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env.prod
+#            echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env.prod
+#            echo "DB_USER=${{ secrets.DB_USER }}" >> .env.prod
+#            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env.prod
+#            ls -la
+#            docker compose -f docker-compose.prod.yml build --no-cache
+#            docker compose -f docker-compose.prod.yml down
+#            docker compose -f docker-compose.prod.yml up -d

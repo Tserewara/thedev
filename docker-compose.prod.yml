@@ -5,7 +5,7 @@ services:
     volumes:
       - certbot_data:/etc/letsencrypt
       - certbot_www:/var/www/certbot
-    command: certonly --webroot --webroot-path=/var/www/certbot --noninteractive --agree-tos -d thedev.com.br --email ${CERTBOT_EMAIL} --keep-until-expiring
+    command: certonly --webroot --webroot-path=/var/www/certbot --noninteractive --agree-tos -d thedev.com.br --email ${USER_EMAIL} --keep-until-expiring
     depends_on:
       - nginx
     env_file: .env

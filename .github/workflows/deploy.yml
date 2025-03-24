@@ -38,6 +38,7 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             cd /thedev
+            sudo chown -R ${{ secrets.SSH_USER }}:${{ secrets.SSH_USER }} .
             echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env.prod
             echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env.prod
             echo "DB_USER=${{ secrets.DB_USER }}" >> .env.prod

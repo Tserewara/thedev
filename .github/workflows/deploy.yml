@@ -34,6 +34,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
+          scp -r $GITHUB_WORKSPACE/* ${{ secrets.SSH_USER }}@${{ secrets.VPS_IP }}:/app/
           hostname -I
           cd /app
           echo "SECRET_KEY=${{ secrets.SECRET_KEY }}"

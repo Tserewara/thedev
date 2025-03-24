@@ -6,9 +6,8 @@ services:
       args:
         SECRET_KEY: ${SECRET_KEY}
         DB_PASSWORD: ${DB_PASSWORD}
-    command: >
-      bash -c "cd thedev &&
-      PYTHONPATH=/app/thedev gunicorn --bind 0.0.0.0:8000 thedev.wsgi:application"    restart: unless-stopped
+    command: gunicorn --bind 0.0.0.0:8000 --chdir /thedev thedev.wsgi:application
+    restart: unless-stopped
     env_file:
       - .env
     volumes:

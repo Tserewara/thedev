@@ -6,7 +6,7 @@ services:
       args:
         SECRET_KEY: ${SECRET_KEY}
         DB_PASSWORD: ${DB_PASSWORD}
-    command: gunicorn --bind 0.0.0.0:8000 --chdir /app thedev.thedev.wsgi:application
+    command: gunicorn --bind 0.0.0.0:8000 --pythonpath /app/thedev thedev.wsgi:application
     restart: unless-stopped
     env_file:
       - .env

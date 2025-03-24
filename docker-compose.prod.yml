@@ -1,4 +1,42 @@
 services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      args:
+        SECRET_KEY: ${SECRET_KEY}
+        DB_PASSWORD: ${DB_PASSWORD}
+    command: gunicorn --bind 0.0.0.0:8000 --pythonpath /app/thedev thedev.wsgi:application
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment: # Add these environment variables
+      - PYTHONUNBUFFERED=1
+      - DJANGO_SETTINGS_MODULE=thedev.settings
+      - SECURE_PROXY_SSL_HEADER=HTTP_X_FORWARDED_PROTO,https
+      - SECURE_SSL_REDIRECT=1
+
+    volumes:
+      - static_volume:/app/static
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:15
+    container_name: postgres_prod
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   certbot:
     image: certbot/certbot
     restart: unless-stopped
@@ -37,5 +75,5 @@ services:
       fi'
 
 volumes:
-  certbot_data:
-  certbot_www:
+  postgres_data_prod:
+  static_volume:

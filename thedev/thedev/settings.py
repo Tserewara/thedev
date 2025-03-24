@@ -31,11 +31,12 @@ ALLOWED_HOSTS = ['thedev.com.br', os.getenv("VPS_IP")]
 # Security settings
 CSRF_TRUSTED_ORIGINS = [
     "https://thedev.com.br",
+    "http://thedev.com.br",
+    "http://www.thedev.com.br",
     "https://www.thedev.com.br",
     "http://localhost",
     "http://127.0.0.1"
 ]
-
 SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = False

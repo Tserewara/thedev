@@ -2,7 +2,7 @@ name: Deploy to Production
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 env:
   DB_NAME: ${{ secrets.DB_NAME }}
@@ -16,33 +16,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Install SSH key
-      uses: shimataro/ssh-key-action@v2
-      with:
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        known_hosts: ${{ secrets.KNOWN_HOSTS }}
-        # Add passphrase for encrypted private key
-        passphrase: ${{ secrets.SSH_PASSPHRASE }}
-
-    - name: Copy files to VPS
-      run: |
-        ssh-agent -a /tmp/ssh_agent.sock > /dev/null
-        echo 'echo $SSH_PASSPHRASE' > ~/.ssh_askpass && chmod +x ~/.ssh_askpass
-        echo "$SSH_PRIVATE_KEY" | tr -d '\r' | DISPLAY=None SSH_ASKPASS=~/.ssh_askpass ssh-add - >/dev/null
-        scp -r $GITHUB_WORKSPACE/* ${{ secrets.SSH_USER }}@${{ secrets.VPS_IP }}:/app/
-
     - name: Deploy to VPS
-      run: |
-        ssh ${{ secrets.SSH_USER }}@${{ secrets.VPS_IP }} << EOF
-        cd /app
-        echo "SECRET_KEY=$SECRET_KEY" > .env.prod
-        echo "DB_NAME=$DB_NAME" >> .env.prod
-        echo "DB_USER=$DB_USER" >> .env.prod
-        echo "DB_PASSWORD=$DB_PASSWORD" >> .env.prod
-        docker-compose -f docker-compose.prod.yml build --no-cache
-        docker-compose -f docker-compose.prod.yml down
-        docker-compose -f docker-compose.prod.yml up -d
-        EOF
+      uses: appleboy/ssh-action@v0.1.3
+      with:
+        host: ${{ secrets.VPS_IP }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        script: |
+          cd /app
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" > .env.prod
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env.prod
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env.prod
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env.prod
+          docker-compose -f docker-compose.prod.yml build --no-cache
+          docker-compose -f docker-compose.prod.yml down
+          docker-compose -f docker-compose.prod.yml up -d

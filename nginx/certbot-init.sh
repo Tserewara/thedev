@@ -2,7 +2,7 @@
 
 # Initial certificate request
 certbot certonly --webroot -w /var/www/certbot \
-    --email your-email@example.com \
+    --email alvaro.alf2@gmail.com \
     --agree-tos \
     --no-eff-email \
     -d thedev.com.br \

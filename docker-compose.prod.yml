@@ -37,6 +37,18 @@ services:
       timeout: 5s
       retries: 5
 
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    environment:
+      - CERTBOT_EMAIL=${CERTBOT_EMAIL}  # Add this to your .env file
+    command: certonly --webroot --webroot-path=/var/www/certbot --noninteractive --agree-tos -d thedev.com.br --keep-until-expiring
+    depends_on:
+      - nginx
+
   nginx:
     build: ./nginx
     restart: unless-stopped
@@ -49,7 +61,18 @@ services:
       - ./data/certbot/www:/var/www/certbot
     depends_on:
       - web
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    command: |
+      /bin/sh -c '
+      if [ ! -f /etc/letsencrypt/live/thedev.com.br/fullchain.pem ]; then
+        echo "No SSL certificate found. Starting in HTTP mode..."
+        nginx -g "daemon off;"
+      else
+        echo "SSL certificate found. Starting in HTTPS mode..."
+        while :; do
+          sleep 6h
+          nginx -s reload
+        done & nginx -g "daemon off;"
+      fi'
 
 volumes:
   postgres_data_prod:

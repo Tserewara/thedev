@@ -27,7 +27,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           source: "."
-          target: "."
+          target: "/"
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v0.1.3

@@ -33,7 +33,8 @@ CSRF_TRUSTED_ORIGINS = ['http://thedev.com.br', 'http://localhost', 'http://127.
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-
+CSRF_USE_SESSIONS = True
+CSRF_COOKIE_SAMESITE = 'Strict'
 # Application definition
 
 INSTALLED_APPS = [

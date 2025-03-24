@@ -37,6 +37,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost",
     "http://127.0.0.1"
 ]
+
 SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = False

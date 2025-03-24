@@ -26,11 +26,11 @@ jobs:
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          source: "."
-          target: "home/${{secrets.SSH_USER}}"
+          source: .
+          target: /home/${{secrets.SSH_USER}}
 
       - name: Deploy to VPS
-        uses: appleboy/ssh-action@v0.1.3
+        uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_IP }}
           username: root

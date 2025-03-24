@@ -28,7 +28,7 @@ DEBUG = os.getenv('DEBUG', '0') == '1'
 
 ALLOWED_HOSTS = ['thedev.com.br', 'localhost', '127.0.0.1']
 
-
+CSRF_TRUSTED_ORIGINS = ['http://thedev.com.br', 'http://localhost', 'http://127.0.0.1']
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = True

@@ -9,7 +9,7 @@ services:
     command: gunicorn --bind 0.0.0.0:8000 thedev.wsgi:application
     restart: unless-stopped
     env_file:
-      - .env.prod
+      - .env
     volumes:
       - static_volume:/app/static
     depends_on:

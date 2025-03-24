@@ -28,14 +28,20 @@ DEBUG = os.getenv('DEBUG', '0') == '1'
 
 ALLOWED_HOSTS = ['thedev.com.br', 'localhost', '127.0.0.1']
 
-CSRF_TRUSTED_ORIGINS = ['http://thedev.com.br', 'http://localhost', 'http://127.0.0.1']
+# Security settings
+CSRF_TRUSTED_ORIGINS = [
+    "https://thedev.com.br",
+    "https://www.thedev.com.br"
+]
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-CSRF_USE_SESSIONS = True
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 CSRF_COOKIE_SAMESITE = 'Strict'
-# Application definition
 
 INSTALLED_APPS = [
     'project.apps.ProjectConfig',

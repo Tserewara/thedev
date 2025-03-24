@@ -28,6 +28,6 @@ ENV PATH=/root/.local/bin:$PATH
 WORKDIR /app
 COPY . .
 
-RUN python thedev/manage.py collectstatic --noinput
+RUN cd thedev && python manage.py collectstatic --noinput
 
 EXPOSE 8000

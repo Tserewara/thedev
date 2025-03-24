@@ -33,7 +33,6 @@ jobs:
         with:
           host: ${{ secrets.VPS_IP }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             cd /home/${{secrets.SSH_USER}}
             echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env.prod

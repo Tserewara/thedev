@@ -38,14 +38,6 @@ jobs:
             
             cd /home/${{secrets.SSH_USER}}
             [ - f .env ] && rm .env
-            # Preserve certificate data between deployments
-            if [ ! -d data/certbot ]; then
-              mkdir -p data/certbot/conf data/certbot/www
-            fi
-            if [ ! -f data/certbot/conf/live/thedev.com.br/fullchain.pem ]; then
-            echo "Generating initial SSL certificate..."
-              sg docker -c "docker compose -f docker-compose.prod.yml run --rm certbot"
-            fi
             echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
             echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
             echo "DB_USER=${{ secrets.DB_USER }}" >> .env

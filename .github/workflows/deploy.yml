@@ -36,11 +36,10 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/${{secrets.SSH_USER}}
-            echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env.prod
-            echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env.prod
-            echo "DB_USER=${{ secrets.DB_USER }}" >> .env.prod
-            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env.prod
-            ls -la
+            echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
+            echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+            echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
             docker compose -f docker-compose.prod.yml build --no-cache
             docker compose -f docker-compose.prod.yml down
             docker compose -f docker-compose.prod.yml up -d

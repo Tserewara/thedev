@@ -25,7 +25,7 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
           ssh-keyscan -H ${{ secrets.VPS_IP }} >> ~/.ssh/known_hosts
-          scp -r * ${{ secrets.SSH_USER }}@${{ secrets.VPS_IP }}:/app/
+          scp $GITHUB_WORKSPACE/ /app/
           cd /app
           echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env.prod
           echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env.prod

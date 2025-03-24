@@ -1,53 +1,14 @@
 services:
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile.prod
-      args:
-        SECRET_KEY: ${SECRET_KEY}
-        DB_PASSWORD: ${DB_PASSWORD}
-    command: gunicorn --bind 0.0.0.0:8000 --pythonpath /app/thedev thedev.wsgi:application
-    restart: unless-stopped
-    env_file:
-      - .env
-    environment: # Add these environment variables
-      - PYTHONUNBUFFERED=1
-      - DJANGO_SETTINGS_MODULE=thedev.settings
-      - SECURE_PROXY_SSL_HEADER=HTTP_X_FORWARDED_PROTO,https
-      - SECURE_SSL_REDIRECT=1
-
-    volumes:
-      - static_volume:/app/static
-    depends_on:
-      db:
-        condition: service_healthy
-
-  db:
-    image: postgres:15
-    container_name: postgres_prod
-    volumes:
-      - postgres_data_prod:/var/lib/postgresql/data/
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
   certbot:
     image: certbot/certbot
     restart: unless-stopped
     volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-    environment:
-      - CERTBOT_EMAIL=${CERTBOT_EMAIL}  # Add this to your .env file
-    command: certonly --webroot --webroot-path=/var/www/certbot --noninteractive --agree-tos -d thedev.com.br --keep-until-expiring
+      - certbot_data:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    command: certonly --webroot --webroot-path=/var/www/certbot --noninteractive --agree-tos -d thedev.com.br --email ${CERTBOT_EMAIL} --keep-until-expiring
     depends_on:
       - nginx
+    env_file: .env
 
   nginx:
     build: ./nginx
@@ -57,10 +18,11 @@ services:
       - "443:443"
     volumes:
       - static_volume:/app/static
-      - ./data/certbot/conf:/etc/letsencrypt  # Certificate storage
-      - ./data/certbot/www:/var/www/certbot
+      - certbot_data:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
     depends_on:
       - web
+      - certbot
     command: |
       /bin/sh -c '
       if [ ! -f /etc/letsencrypt/live/thedev.com.br/fullchain.pem ]; then
@@ -75,5 +37,5 @@ services:
       fi'
 
 volumes:
-  postgres_data_prod:
-  static_volume:
+  certbot_data:
+  certbot_www:

@@ -28,21 +28,21 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           source: "."
           target: "/thedev"
-#
-#      - name: Deploy to VPS
-#        uses: appleboy/ssh-action@v0.1.3
-#        with:
-#          host: ${{ secrets.VPS_IP }}
-#          username: ${{ secrets.SSH_USER }}
-#          key: ${{ secrets.SSH_PRIVATE_KEY }}
-#          passphrase: ${{ secrets.SSH_PASSPHRASE }}
-#          script: |
-#            cd /thedev
-#            echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env.prod
-#            echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env.prod
-#            echo "DB_USER=${{ secrets.DB_USER }}" >> .env.prod
-#            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env.prod
-#            ls -la
-#            docker compose -f docker-compose.prod.yml build --no-cache
-#            docker compose -f docker-compose.prod.yml down
-#            docker compose -f docker-compose.prod.yml up -d
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          script: |
+            cd /thedev
+            echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env.prod
+            echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env.prod
+            echo "DB_USER=${{ secrets.DB_USER }}" >> .env.prod
+            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env.prod
+            ls -la
+            docker compose -f docker-compose.prod.yml build --no-cache
+            docker compose -f docker-compose.prod.yml down
+            docker compose -f docker-compose.prod.yml up -d

@@ -16,16 +16,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-#    - name: Copy files to VPS
-#      uses: appleboy/ssh-action@v0.1.3
-#      with:
-#        host: ${{ secrets.VPS_IP }}
-#        username: ${{ secrets.SSH_USER }}
-#        key: ${{ secrets.SSH_PRIVATE_KEY }}
-#        passphrase: ${{ secrets.SSH_PASSPHRASE }}
-#        script: |
-#          scp -r $GITHUB_WORKSPACE/* ${{ secrets.SSH_USER }}@${{ secrets.VPS_IP }}:/app/
-
     - name: Deploy to VPS
       uses: appleboy/ssh-action@v0.1.3
       with:
@@ -35,12 +25,11 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
           scp -r $GITHUB_WORKSPACE/* ${{ secrets.SSH_USER }}@${{ secrets.VPS_IP }}:/app/
-          hostname -I
           cd /app
-          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}"
-          echo "DB_NAME=${{ secrets.DB_NAME }}"
-#          echo "DB_USER=${{ secrets.DB_USER }}" >> .env.prod
-#          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env.prod
-#          docker compose -f docker-compose.prod.yml build --no-cache
-#          docker compose -f docker-compose.prod.yml down
-#          docker compose -f docker-compose.prod.yml up -d
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env.prod
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env.prod
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env.prod
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env.prod
+          docker compose -f docker-compose.prod.yml build --no-cache
+          docker compose -f docker-compose.prod.yml down
+          docker compose -f docker-compose.prod.yml up -d

@@ -24,6 +24,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
+          scp -r $GITHUB_WORKSPACE/* ${{ secrets.SSH_USER }}@${{ secrets.VPS_IP }}:/app/
           cd /app
           echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" > .env.prod
           echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env.prod

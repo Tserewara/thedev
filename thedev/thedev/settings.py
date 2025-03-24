@@ -26,7 +26,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # Add these to your settings
 DEBUG = os.getenv('DEBUG', '0') == '1'
 
-ALLOWED_HOSTS = ['thedev.com.br', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['thedev.com.br', os.getenv("VPS_IP")]
 
 # Security settings
 CSRF_TRUSTED_ORIGINS = [
@@ -34,14 +34,10 @@ CSRF_TRUSTED_ORIGINS = [
     "https://www.thedev.com.br"
 ]
 
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
-SECURE_HSTS_SECONDS = 31536000  # 1 year
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-CSRF_COOKIE_SAMESITE = 'Strict'
+SECURE_SSL_REDIRECT = False
+SECURE_PROXY_SSL_HEADER = None
 
 INSTALLED_APPS = [
     'project.apps.ProjectConfig',

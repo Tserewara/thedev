@@ -25,6 +25,7 @@ RUN apk update && apk add libpq
 COPY --from=builder /root/.local /root/.local
 ENV PATH=/root/.local/bin:$PATH
 
+WORKDIR /app
 COPY . .
 
 RUN python manage.py collectstatic --noinput

@@ -31,13 +31,18 @@ ALLOWED_HOSTS = ['thedev.com.br', os.getenv("VPS_IP")]
 # Security settings
 CSRF_TRUSTED_ORIGINS = [
     "https://thedev.com.br",
-    "https://www.thedev.com.br"
+    "https://www.thedev.com.br",
+    "http://localhost",
+    "http://127.0.0.1"
 ]
 
 SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = False
 SECURE_PROXY_SSL_HEADER = None
+CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_HTTPONLY = False
+SESSION_COOKIE_SAMESITE = 'Lax'
 
 INSTALLED_APPS = [
     'project.apps.ProjectConfig',

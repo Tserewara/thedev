@@ -65,4 +65,14 @@ volumes:
   postgres_data_prod:
   static_volume:
   certbot-etc:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./certbot/etc
   certbot-www:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./certbot/www

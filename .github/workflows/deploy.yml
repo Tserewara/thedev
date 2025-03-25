@@ -23,19 +23,19 @@ jobs:
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_IP }}
-          username: ${{secrets.SSH_USER}}
+          username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: .
-          target: /home/${{secrets.SSH_USER}}/
+          target: /home/${{ secrets.SSH_USER }}/
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_IP }}
-          username: ${{secrets.SSH_USER}}
+          username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/${{secrets.SSH_USER}}
+            cd /home/${{ secrets.SSH_USER }}
             [ -f .env ] && rm .env
             echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
             echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env

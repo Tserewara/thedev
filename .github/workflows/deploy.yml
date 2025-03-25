@@ -19,21 +19,20 @@ jobs:
       - name: Download code
         uses: actions/checkout@v4
 
-      - name: Copy code to VPS using rsync
-        uses: burnett01/rsync-deployments@7.0.2
+      - name: Copy code to VPS
+        uses: appleboy/scp-action@v0.1.7
         with:
-          switches: -avz --delete
-          path: ./
-          remote_path: /home/${{ secrets.SSH_USER }}/
-          remote_host: ${{ secrets.VPS_IP }}
-          remote_user: ${{ secrets.SSH_USER }}
-          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: .
+          target: /home/${{ secrets.SSH_USER }}/
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_IP }}
-          username: ${{ secrets.SSH_USER }}
+          username: ${{ secrets.SSH_USER}}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/${{ secrets.SSH_USER }}

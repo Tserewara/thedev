@@ -39,6 +39,7 @@ services:
       retries: 5
 
   nginx:
+    container_name: nginx
     image: nginx:1.25
     restart: on-failure
     ports:
@@ -53,6 +54,7 @@ services:
     depends_on:
       - web
   certbot:
+    container_name: certbot
     image: certbot/certbot
     restart: on-failure
     volumes:

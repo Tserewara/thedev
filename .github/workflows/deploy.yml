@@ -19,7 +19,11 @@ jobs:
       - name: Download code
         uses: actions/checkout@v4
 
-      - name: Copy code to VPS 
+      - name: Check SSH connection
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.SSH_USER }}@${{ secrets.VPS_IP }} "echo SSH connection successful"
+
+      - name: Copy code to VPS
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_IP }}
@@ -32,7 +36,7 @@ jobs:
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_IP }}
-          username: ${{ secrets.SSH_USER}}
+          username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/${{ secrets.SSH_USER }}
